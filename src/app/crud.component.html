@@ -1,0 +1,77 @@
+<body>
+<div id="login">
+<h1 class="text-center text-white pt-5"> CRUD example in Angular</h1>
+<h3 class="text-center text-white pt-5" *ngIf="articleIdToUpdate; else create"> 
+    Update Information for ID : {{articleIdToUpdate}}
+</h3>
+<ng-template #create>
+    <h3 class="text-center text-white pt-5"> Create New Entry</h3>
+</ng-template>
+<div>
+    <div class="container">
+        <div id="login-row" class="row justify-content-center align-items-center">
+            <div id="login-column" class="col-md-6">
+                <div class="login-box col-md-12">
+                    <form id="bootstrap-form" class="form" [formGroup]="articleForm" (ngSubmit)="onArticleFormSubmit()">
+                        <div class="form-group">
+                            <label class="text-info">Enter Title</label><br>
+                            <input formControlName="title" class="form-control">
+                            <label *ngIf="articleForm.get('title').invalid && processValidation" [ngClass] = "'error'">title is required </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-info">Enter Category</label><br>
+                            <input class="form-control" formControlName="category">
+                            <label *ngIf="articleForm.get('category').invalid && processValidation" [ngClass]="'error'">category is required</label>
+                        </div>
+                            <button class="btn btn-success pull-right" *ngIf="!articleIdToUpdate" target="_self">create</button>
+                            <button class="btn btn-success pull-right" *ngIf="articleIdToUpdate" target="_self">Update</button>
+                            <button class="btn btn-primary" (click)="backToCreateArticle()" *ngIf="articleIdToUpdate">Go Back</button>
+                
+                   
+                    <div *ngIf="statusCode; else processing">
+                        <div *ngIf="statusCode === 201" [ngClass] = "'success'">
+                            Entry Added Successfully
+                        </div>
+                        <div *ngIf="statusCode === 409" [ngClass]="'success'">
+                            Entry already exist
+                        </div>
+                        <div *ngIf="statusCode ===200" [ngClass]="'success'">
+                            entry Deleted Successfully
+                        </div>
+                        <div *ngIf="statusCode === 500" [ngClass]="'error'">
+                            Internal Server error
+                        </div>
+                    </div>
+                    <ng-template #processing>
+                            <i class="fa fa-circle-o-notch fa-spin" style="font-size:50px"></i>
+                    </ng-template>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <h3>Details</h3>
+<table class="table table-striped table-bordered table-hover table-sm">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Title</th>
+            <th scope="col">Category</th>
+            <th colspan="2"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let article of allArticles">
+            <td >{{article.id}}</td>
+            <td class="text-center">{{article.title}}</td>
+            <td class="text-center">{{article.category}}</td>
+            <td><button type="button" class="btn btn-success pull-right btn-sm" (click)="loadArticleToEdit(article.id)">edit</button></td>
+            <td><button type="button" target="_self" class="btn btn-danger btn-sm" (click)="deleteArticle(article.id)">Delete</button></td>
+        </tr>
+    </tbody>
+</table>
+</div>
+</div>
+</div>
+</body>
